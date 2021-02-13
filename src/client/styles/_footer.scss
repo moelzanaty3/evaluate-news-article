@@ -1,0 +1,27 @@
+footer {
+  color: #999;
+  background: #f2f2f2;
+  text-align: center;
+}
+.footer__site-info {
+  font-size: 12px;
+  padding: 5rem 0;
+}
+.footer__social {
+  position: relative;
+  margin-bottom: 20px;
+  text-align: center;
+  .social__item {
+    color: #696969;
+    display: inline-block;
+    font-size: 18px;
+    text-align: center;
+    margin-right: 10px;
+    &:hover {
+      color: #f8c803;
+    }
+  }
+}
+.footer__copyright {
+  color: #696969;
+}
