@@ -41,6 +41,8 @@ app.post('/add-url', async (req, res) => {
        }
   */
   // `${BASE_URL}?key=${API_KEY}&url=${url}&lang=en`
+  // https://api.meaningcloud.com/sentiment-2.1?
+  // key=81ad7bc42b856636f511bd9d31c6fe28&url=https://jamesclear.com/five-step-creative-process&lang=en
 })
 
 app.get('/test', function (req, res) {
