@@ -40,9 +40,22 @@ app.post('/add-url', async (req, res) => {
          irony : mcData.irony
        }
   */
-  // `${BASE_URL}?key=${API_KEY}&url=${url}&lang=en`
-  // https://api.meaningcloud.com/sentiment-2.1?
-  // key=81ad7bc42b856636f511bd9d31c6fe28&url=https://jamesclear.com/five-step-creative-process&lang=en
+  const { articleUrl } = req.body
+  const meaningCloudUrl = `${BASE_URL}?key=${API_KEY}&url=${articleUrl}&lang=en`
+  const response = await fetch(meaningCloudUrl)
+  try {
+    const mcData = await response.json()
+    const projectData = {
+      score_tag: mcData.score_tag,
+      agreement: mcData.agreement,
+      subjectivity: mcData.subjectivity,
+      confidence: mcData.confidence,
+      irony: mcData.irony,
+    }
+    res.send(projectData)
+  } catch (error) {
+    console.log(error)
+  }
 })
 
 app.get('/test', function (req, res) {

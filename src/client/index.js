@@ -1,4 +1,3 @@
-import isURLValid from './utils/validateURL'
 import handleSubmit from './js/formHandler'
 
 import './styles/style.scss'
@@ -12,4 +11,4 @@ window.addEventListener('DOMContentLoaded', () => {
         handleSubmit()
     })
 });
-export { isURLValid, handleSubmit }
+export { handleSubmit }
