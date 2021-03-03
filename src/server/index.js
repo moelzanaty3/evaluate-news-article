@@ -1,60 +1,48 @@
-const dotenv = require('dotenv')
-const path = require('path')
+// Configure the environment variables
+require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
-const fetch = require('node-fetch')
+const axios = require('axios')
 const cors = require('cors')
+
 const mockAPIResponse = require('./mockAPI.js')
 
-dotenv.config()
+const MEAN_CLOUD_API_URL = 'https://api.meaningcloud.com/sentiment-2.1'
+const MEAN_CLOUD_API_KEY = process.env.MEAN_CLOUD_API_KEY
 
+// Create an instance for the server
 const app = express()
-
+// handle cors to avoid cors-origin issue
 app.use(cors())
+// Configuring express to use body-parser as middle-ware.
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+// Configuring express static directory
 app.use(express.static('dist'))
-
-const BASE_URL = 'https://api.meaningcloud.com/sentiment-2.1'
-const API_KEY = process.env.MEANING_CLOUD_API_KEY
-
+// handle base route
 app.get('/', function (req, res) {
-  res.sendFile('dist/index.html')
-  // res.sendFile(path.resolve('src/client/views/index.html'))
+  // res.sendFile('dist/index.html')
+  res.sendFile(path.resolve('src/client/views/index.html'))
 })
 
 app.post('/add-url', async (req, res) => {
-  /* TODO:
-      1. GET the url from the request body
-      2. Build the URL
-      3. Fetch Data from API
-      4. Send it to the client
-      server sends only specified data to the client with below codes
-       const projectData = {
-         score_tag : mcData.score_tag,
-         agreement : mcData.agreement,
-         subjectivity : mcData.subjectivity,
-         confidence : mcData.confidence,
-         irony : mcData.irony
-       }
-  */
   const { articleUrl } = req.body
-  const meaningCloudUrl = `${BASE_URL}?key=${API_KEY}&url=${articleUrl}&lang=en`
-  const response = await fetch(meaningCloudUrl)
+  const meaningCloudUrl = `${MEAN_CLOUD_API_URL}?key=${MEAN_CLOUD_API_KEY}&url=${articleUrl}&lang=en`
   try {
-    const mcData = await response.json()
-    const projectData = {
-      text: mcData.sentence_list[0].text || '',
-      score_tag: mcData.score_tag,
-      agreement: mcData.agreement,
-      subjectivity: mcData.subjectivity,
-      confidence: mcData.confidence,
-      irony: mcData.irony,
-    }
-    res.send(projectData)
+    const {
+      data: { sentence_list, score_tag, agreement, subjectivity, confidence, irony },
+    } = await axios(meaningCloudUrl)
+    res.send({
+      text: sentence_list[0].text || '',
+      score_tag: score_tag,
+      agreement: agreement,
+      subjectivity: subjectivity,
+      confidence: confidence,
+      irony: irony,
+    })
   } catch (error) {
-    console.log(error)
+    console.log(error.message)
   }
 })
 
@@ -68,7 +56,6 @@ app.listen(8081, (error) => {
   console.log('Server listening on port 8081!')
 })
 
-
 module.exports = {
-  app
+  app,
 }
