@@ -20,8 +20,8 @@ const BASE_URL = 'https://api.meaningcloud.com/sentiment-2.1'
 const API_KEY = process.env.MEANING_CLOUD_API_KEY
 
 app.get('/', function (req, res) {
-  // res.sendFile('dist/index.html')
-  res.sendFile(path.resolve('src/client/views/index.html'))
+  res.sendFile('dist/index.html')
+  // res.sendFile(path.resolve('src/client/views/index.html'))
 })
 
 app.post('/add-url', async (req, res) => {
@@ -30,7 +30,6 @@ app.post('/add-url', async (req, res) => {
       2. Build the URL
       3. Fetch Data from API
       4. Send it to the client
-      5. REMOVE THIS TODO AFTER DOING IT 😎😎
       server sends only specified data to the client with below codes
        const projectData = {
          score_tag : mcData.score_tag,
@@ -46,6 +45,7 @@ app.post('/add-url', async (req, res) => {
   try {
     const mcData = await response.json()
     const projectData = {
+      text: mcData.sentence_list[0].text || '',
       score_tag: mcData.score_tag,
       agreement: mcData.agreement,
       subjectivity: mcData.subjectivity,
@@ -67,3 +67,8 @@ app.listen(8081, (error) => {
   if (error) throw new Error(error)
   console.log('Server listening on port 8081!')
 })
+
+
+module.exports = {
+  app
+}

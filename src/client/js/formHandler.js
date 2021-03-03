@@ -32,6 +32,7 @@ const handleSubmit = async () => {
     const mcData = await postDate('http://localhost:8081/add-url', {
         articleUrl
     })
+    document.getElementById('text').textContent = mcData.text
     document.getElementById('agreement').textContent = mcData.agreement
     document.getElementById('confidence').textContent = mcData.confidence
     document.getElementById('score_tag').textContent = mcData.score_tag
